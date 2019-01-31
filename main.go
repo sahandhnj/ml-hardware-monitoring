@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/sahandhnj/ml-hardware-monitoring/db"
 	"github.com/sahandhnj/ml-hardware-monitoring/gpu"
 )
@@ -13,6 +15,7 @@ func main() {
 
 	GPU := &gpu.GPU{
 		DBService: dbService,
+		Interval:  time.Second * 1,
 	}
 
 	GPU.Run()

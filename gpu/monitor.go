@@ -15,6 +15,7 @@ import (
 
 type GPU struct {
 	DBService *db.DBService
+	Interval  time.Duration
 }
 
 func (g *GPU) Run() {
@@ -41,7 +42,7 @@ func (g *GPU) Run() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
-	ticker := time.NewTicker(time.Second / 1000)
+	ticker := time.NewTicker(g.Interval)
 	defer ticker.Stop()
 
 	for {

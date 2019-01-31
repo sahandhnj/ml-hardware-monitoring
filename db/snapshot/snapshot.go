@@ -96,6 +96,8 @@ func (s *Service) GetNextIdentifier() int {
 }
 
 func (s *Service) CreateSnapshot(snapshot *types.SnapShot) error {
+	snapshot.ID = s.GetNextIdentifier()
+
 	return s.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(BucketName))
 
