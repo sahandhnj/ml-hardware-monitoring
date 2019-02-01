@@ -16,6 +16,7 @@ import (
 type GPU struct {
 	DBService *db.DBService
 	Interval  time.Duration
+	Broadcast chan types.Message
 }
 
 func (g *GPU) Run() {
@@ -53,13 +54,18 @@ func (g *GPU) Run() {
 				if err != nil {
 					log.Panicf("Error getting device %d status: %v\n", i, err)
 				}
+				go func() {
+					snapshot := types.TakeSnapShot(device.UUID, st)
+					message := types.TakeMessage(st)
+					fmt.Println(message)
 
-				snapshot := types.TakeSnapShot(device.UUID, st)
-				fmt.Println(snapshot)
+					g.DBService.SnapShotService.CreateSnapshot(snapshot)
+					g.Broadcast <- *message
+				}()
 
-				g.DBService.SnapShotService.CreateSnapshot(snapshot)
 			}
 		case <-sigs:
+			panic("BOOOOO")
 			return
 		}
 	}

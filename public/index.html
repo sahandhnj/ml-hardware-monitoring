@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>GPU</title>
+    <script>
+        window.onload = function () {
+            var ws = new WebSocket('ws://' + window.location.host + '/ws');
+            var dps = [];
+            var xVal = 0;
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title: {
+                    text: "GPU Usage"
+                },
+                axisY: {
+                    includeZero: false
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: dps
+                }]
+            });
+
+            ws.addEventListener('message', function (e) {
+                var msg = JSON.parse(e.data);
+                console.log(msg);
+                updateChart(msg);
+            });
+
+            var updateChart = function (msg) {
+                dps.push({
+                    x: xVal++,
+                    y: msg.gpu,
+                });
+
+                chart.render();
+            };
+
+
+        }
+    </script>
+</head>
+
+<body>
+    BLABLA
+    <div id="chartContainer" style="height: 370px; width:100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+
+</html>

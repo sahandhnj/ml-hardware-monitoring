@@ -8,7 +8,7 @@ import (
 
 type SnapShot struct {
 	ID           int       `json:"id"`
-	TimeStamp    time.Time `json:"time_stamp"`
+	Timestamp    time.Time `json:"time_stamp"`
 	DeviceUUID   string    `json:"device_uuid"`
 	Power        uint      `json:"power"`
 	Temperature  uint      `json:"temprature"`
@@ -23,7 +23,7 @@ type SnapShot struct {
 func TakeSnapShot(deviceUUID string, st *nvml.DeviceStatus) *SnapShot {
 	return &SnapShot{
 		// Power:        *st.Power,
-		TimeStamp:    time.Now(),
+		Timestamp:    time.Now(),
 		DeviceUUID:   deviceUUID,
 		Temperature:  *st.Temperature,
 		GPU:          *st.Utilization.GPU,
@@ -32,5 +32,17 @@ func TakeSnapShot(deviceUUID string, st *nvml.DeviceStatus) *SnapShot {
 		Decoder:      *st.Utilization.Decoder,
 		ClocksMemory: *st.Clocks.Memory,
 		ClocksCores:  *st.Clocks.Cores,
+	}
+}
+
+type Message struct {
+	Timestamp time.Time `json:"time_stamp"`
+	GPU       uint      `json:"gpu"`
+}
+
+func TakeMessage(st *nvml.DeviceStatus) *Message {
+	return &Message{
+		Timestamp: time.Now(),
+		GPU:       *st.Utilization.GPU,
 	}
 }
