@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -28,7 +27,6 @@ func main() {
 	http.HandleFunc("/ws", handleConnections)
 
 	go handleMessages()
-	fmt.Println("HI")
 	dbService, err := db.NewDBService()
 	if err != nil {
 		panic(err)
@@ -36,7 +34,7 @@ func main() {
 
 	GPU := &gpu.GPU{
 		DBService: dbService,
-		Interval:  time.Second / 1000,
+		Interval:  time.Second / 100,
 		Broadcast: broadcast,
 	}
 

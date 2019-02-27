@@ -38,11 +38,13 @@ func TakeSnapShot(deviceUUID string, st *nvml.DeviceStatus) *SnapShot {
 type Message struct {
 	Timestamp time.Time `json:"time_stamp"`
 	GPU       uint      `json:"gpu"`
+	CPU       float64   `json:"cpu"`
 }
 
-func TakeMessage(st *nvml.DeviceStatus) *Message {
+func TakeMessage(st *nvml.DeviceStatus, cpu float64) *Message {
 	return &Message{
 		Timestamp: time.Now(),
 		GPU:       *st.Utilization.GPU,
+		CPU:       cpu,
 	}
 }

@@ -5,10 +5,13 @@
     <title>GPU</title>
     <script>
         window.onload = function () {
-            var ws = new WebSocket('ws://' + window.location.host + '/ws');
-            var dps = [];
-            var xVal = 0;
-            var chart = new CanvasJS.Chart("chartContainer", {
+            let ws = new WebSocket('ws://' + window.location.host + '/ws');
+            let gpu_dps =[]
+            let cpu_dps = [];
+            let xVal_gpu = 0;
+            let xVal_cpu = 0;
+            
+            let gpu_chart = new CanvasJS.Chart("gpuChartContainer", {
                 title: {
                     text: "GPU Usage"
                 },
@@ -17,23 +20,41 @@
                 },
                 data: [{
                     type: "line",
-                    dataPoints: dps
+                    dataPoints: gpu_dps
+                }]
+            });
+
+            let cpu_chart = new CanvasJS.Chart("cpuChartContainer", {
+                title: {
+                    text: "CPU Usage"
+                },
+                axisY: {
+                    includeZero: false
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: cpu_dps
                 }]
             });
 
             ws.addEventListener('message', function (e) {
-                var msg = JSON.parse(e.data);
-                console.log(msg);
-                updateChart(msg);
+                let msg = JSON.parse(e.data);
+                updateCharts(msg);
             });
 
-            var updateChart = function (msg) {
-                dps.push({
-                    x: xVal++,
+            let updateCharts = function (msg) {
+                gpu_dps.push({
+                    x: xVal_gpu++,
                     y: msg.gpu,
                 });
 
-                chart.render();
+                cpu_dps.push({
+                    x: xVal_cpu++,
+                    y: msg.cpu,
+                });
+
+                gpu_chart.render();
+                cpu_chart.render();
             };
 
 
@@ -42,8 +63,8 @@
 </head>
 
 <body>
-    BLABLA
-    <div id="chartContainer" style="height: 370px; width:100%;"></div>
+    <div id="gpuChartContainer" style="height: 370px; width:100%;"></div>
+    <div id="cpuChartContainer" style="height: 370px; width:100%;"></div>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 
